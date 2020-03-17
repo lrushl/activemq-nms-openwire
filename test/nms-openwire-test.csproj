@@ -37,38 +37,33 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <Reference Include="Apache.NMS.Test">
+      <HintPath>..\ext_bin\netstandard2.0\Apache.NMS.Test.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35'">
     <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
+    <Reference Include="Apache.NMS.Test">
+      <HintPath>..\ext_bin\net35\Apache.NMS.Test.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40'">
     <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
+    <Reference Include="Apache.NMS.Test">
+      <HintPath>..\ext_bin\net40\Apache.NMS.Test.dll</HintPath>
+    </Reference>
   </ItemGroup>
-
-
-
-
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35'">
-    <Reference Include="System.Web" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40'">
-    <Reference Include="System.Web" />
-  </ItemGroup>
-  
 
   <ItemGroup>
     <ProjectReference Include="..\src\nms-openwire.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Apache.NMS.Test">
-      <HintPath>..\ext_bin\Apache.NMS.Test.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
