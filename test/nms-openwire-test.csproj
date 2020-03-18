@@ -41,25 +41,16 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2'">
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
-    <Reference Include="Apache.NMS.Test">
-      <HintPath>..\ext_bin\netstandard2.0\Apache.NMS.Test.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35'">
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
-    <Reference Include="Apache.NMS.Test">
-      <HintPath>..\ext_bin\net35\Apache.NMS.Test.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40'">
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
-    <Reference Include="Apache.NMS.Test">
-      <HintPath>..\ext_bin\net40\Apache.NMS.Test.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
