@@ -60,7 +60,7 @@ namespace Apache.NMS.ActiveMQ.Test
                     using (IMessageConsumer consumer = session.CreateConsumer(queue))
                     {
                         using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                        using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                        using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                         using (SqlCommand sqlInsertCommand = new SqlCommand())
                         {
                             sqlConnection.Open();
@@ -126,7 +126,7 @@ namespace Apache.NMS.ActiveMQ.Test
                         using (IMessageConsumer consumer = session.CreateConsumer(queue))
                         {
                             using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                             using (SqlCommand sqlInsertCommand = new SqlCommand())
                             {
                                 sqlConnection.Open();
@@ -197,7 +197,7 @@ namespace Apache.NMS.ActiveMQ.Test
                         for (int i = 0; i < receiveCount; i++)
                         {
                             using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                             using (SqlCommand sqlInsertCommand = new SqlCommand())
                             {
                                 sqlConnection.Open();
@@ -269,7 +269,7 @@ namespace Apache.NMS.ActiveMQ.Test
                         for (int i = 0; i < receiveCount; i++)
                         {
                             using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                             using (SqlCommand sqlInsertCommand = new SqlCommand())
                             {
                                 sqlConnection.Open();
@@ -712,7 +712,7 @@ namespace Apache.NMS.ActiveMQ.Test
             try
             {
                 using (TransactionScope scoped = new TransactionScope(batchTxControl))
-                using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                 using (SqlCommand sqlInsertCommand = new SqlCommand())
                 {
                     sqlConnection.Open();

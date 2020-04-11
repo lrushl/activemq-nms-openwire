@@ -49,20 +49,30 @@ namespace Apache.NMS.ActiveMQ.Test
         protected const int MSG_COUNT = 5;
         protected string nonExistantPath;
         protected NetTxConnectionFactory dtcFactory;
-        
+
         private ITrace oldTracer;
 
-        protected const string sqlConnectionString =
-            // "Data Source=localhost;Initial Catalog=TestDB;User ID=user;Password=password";
-            "Data Source=.\\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security = true";
         protected const string testTable = "TestTable";
         protected const string testColumn = "TestID";
         protected const string testQueueName = "TestQueue";
         protected const string connectionURI = "tcpfaulty://${activemqhost}:61616";
 
+        protected static string CreateSqlConnectionString()
+        {
+            var connectionString = "Data Source=localhost;Initial Catalog=${TestDbName};User ID=${TestUserName};Password=${TestUserPassword}";
+            connectionString = ReplaceEnvVar(connectionString, "TestDbName", "TestDB");
+            connectionString = ReplaceEnvVar(connectionString, "TestUserName", "sa");
+            connectionString = ReplaceEnvVar(connectionString, "TestUserPassword", string.Empty);
+            return connectionString;
+        }
+
+
         [SetUp]
         public override void SetUp()
         {
+#if !(NET35 || NET40)
+            Assert.Ignore("DTC Transactions are currently not supported on platforms other then .NET 3.5 / .NET 4.0. For more details please navigate https://github.com/dotnet/runtime/issues/715");
+#endif
             this.oldTracer = Tracer.Trace;
             this.nonExistantPath = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
 
@@ -75,7 +85,7 @@ namespace Apache.NMS.ActiveMQ.Test
         public override void TearDown()
         {
             DeleteDestination();
-            
+
             base.TearDown();
 
             Tracer.Trace = this.oldTracer;
@@ -90,7 +100,7 @@ namespace Apache.NMS.ActiveMQ.Test
 
         protected static void PrepareDatabase()
         {
-            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
             {
                 sqlConnection.Open();
 
@@ -120,7 +130,7 @@ namespace Apache.NMS.ActiveMQ.Test
 
         protected static void PurgeDatabase()
         {
-            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
             {
                 sqlConnection.Open();
 
@@ -138,7 +148,7 @@ namespace Apache.NMS.ActiveMQ.Test
         {
             IList entries = new ArrayList();
 
-            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
             {
                 sqlConnection.Open();
 
@@ -158,7 +168,7 @@ namespace Apache.NMS.ActiveMQ.Test
 
         protected static void VerifyDatabaseTableIsEmpty()
         {
-            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
             {
                 sqlConnection.Open();
                 SqlCommand sqlCommand = new SqlCommand(
@@ -176,7 +186,7 @@ namespace Apache.NMS.ActiveMQ.Test
 
         protected static void VerifyDatabaseTableIsFull(int expected)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
             {
                 sqlConnection.Open();
                 SqlCommand sqlCommand = new SqlCommand(
@@ -326,7 +336,7 @@ namespace Apache.NMS.ActiveMQ.Test
         }
 
         protected void VerifyBrokerQueueCount(int expectedCount, string connectionUri)
-        {           
+        {
             using (INetTxConnection connection = dtcFactory.CreateNetTxConnection())
             {
                 // check messages are present in the queue
@@ -497,7 +507,7 @@ namespace Apache.NMS.ActiveMQ.Test
                         producer.DeliveryMode = MsgDeliveryMode.Persistent;
 
                         using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                        using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                        using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                         {
                             sqlConnection.Open();
 
@@ -544,7 +554,7 @@ namespace Apache.NMS.ActiveMQ.Test
                         producer.DeliveryMode = MsgDeliveryMode.Persistent;
 
                         using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                        using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                        using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                         {
                             sqlConnection.Open();
 
@@ -589,7 +599,7 @@ namespace Apache.NMS.ActiveMQ.Test
                     using (IMessageConsumer consumer = session.CreateConsumer(queue))
                     {
                         using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                        using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                        using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                         using (SqlCommand sqlInsertCommand = new SqlCommand())
                         {
                             sqlConnection.Open();
@@ -630,7 +640,7 @@ namespace Apache.NMS.ActiveMQ.Test
                     using (IMessageConsumer consumer = session.CreateConsumer(queue))
                     {
                         using (TransactionScope scoped = new TransactionScope(TransactionScopeOption.RequiresNew))
-                        using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString))
+                        using (SqlConnection sqlConnection = new SqlConnection(CreateSqlConnectionString()))
                         using (SqlCommand sqlInsertCommand = new SqlCommand())
                         {
                             sqlConnection.Open();
